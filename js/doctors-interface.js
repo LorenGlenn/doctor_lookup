@@ -6,8 +6,8 @@ $(document).ready(function() {
     var issue = $('#issue').val();
     $('#issue').val("");
     var output = foundDoctors.getDoctors(issue);
-    output.data.forEach(function(doctor){
-      $('#solution').append("<li>" + doctor.profile.first_name + "</li>");
+    output.forEach(function(bio){
+      $('#solution').append("<li>" + bio + "</li>");
     });
   });
 });
