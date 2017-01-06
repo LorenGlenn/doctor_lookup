@@ -12,21 +12,14 @@ $(document).ready(function() {
   });
 });
 
-var apiKey = "YOUR-API-KEY-GOES-HERE";
+var Doctor = require('./../js/doctors.js').doctorModule;
 
 $(document).ready(function() {
-  $('#weatherLocation').click(function() {
-    var city = $('#location').val();
-    $('#location').val("");
-
-    $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey)
-     .then(function(response){
-        $('.showWeather').text("The humidity in " + city + " is " + response.main.humidity + "%");
-     })
-
-     .fail(function(error) {
-        $('.showWeather').text(error.responseJSON.message);
-      });
+  var foundDoctors = new Doctor();
+  $('#doctorLocation').click(function() {
+    var issue = $('#issue').val();
+    $('#issue').val("");
+    foundDoctors.getDoctors(issue);
   });
 });
 

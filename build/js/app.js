@@ -1,4 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+exports.apiKey = "57e0527a2a203960b4ce874d40f731cb";
+
+},{}],2:[function(require,module,exports){
 function Calculator(skinName) {
   this.skin = skinName;
 }
@@ -21,7 +24,25 @@ Calculator.prototype.pingPong = function(goal) {
 
 exports.calculatorModule = Calculator;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+var apiKey = require('./../.env').apiKey;
+
+function Doctor(){
+}
+
+Doctor.prototype.getDoctors = function(medicalIssue) {
+  $.get('https://api.betterdoctor.com/2016-03-01/doctors?query='+ medicalIssue+'&location=45.5231%2C-122.6765%2C%205&user_location=45.5231%2C-122.6765&skip=0&limit=20&user_key=' + apiKey)
+   .then(function(result) {
+      console.log(result);
+    })
+   .fail(function(error){
+      console.log("fail");
+    });
+};
+
+exports.doctorModule = Doctor;
+
+},{"./../.env":1}],4:[function(require,module,exports){
 var Calculator = require('./../js/doctor.js').calculatorModule;
 
 $(document).ready(function() {
@@ -36,21 +57,14 @@ $(document).ready(function() {
   });
 });
 
-var apiKey = "YOUR-API-KEY-GOES-HERE";
+var Doctor = require('./../js/doctors.js').doctorModule;
 
 $(document).ready(function() {
-  $('#weatherLocation').click(function() {
-    var city = $('#location').val();
-    $('#location').val("");
-
-    $.get('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + apiKey)
-     .then(function(response){
-        $('.showWeather').text("The humidity in " + city + " is " + response.main.humidity + "%");
-     })
-
-     .fail(function(error) {
-        $('.showWeather').text(error.responseJSON.message);
-      });
+  var foundDoctors = new Doctor();
+  $('#doctorLocation').click(function() {
+    var issue = $('#issue').val();
+    $('#issue').val("");
+    foundDoctors.getDoctors(issue);
   });
 });
 
@@ -63,4 +77,4 @@ $(document).ready(function(){
   });
 });
 
-},{"./../js/doctor.js":1}]},{},[2]);
+},{"./../js/doctor.js":2,"./../js/doctors.js":3}]},{},[4]);
