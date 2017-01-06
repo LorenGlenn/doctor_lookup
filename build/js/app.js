@@ -2,29 +2,6 @@
 exports.apiKey = "57e0527a2a203960b4ce874d40f731cb";
 
 },{}],2:[function(require,module,exports){
-function Calculator(skinName) {
-  this.skin = skinName;
-}
-
-Calculator.prototype.pingPong = function(goal) {
-  var output = [];
-  for (var i = 1; i <= goal; i++) {
-    if (i % 15 === 0) {
-      output.push("ping-pong");
-    } else if (i % 3 === 0) {
-      output.push("ping");
-    } else if (i % 5 === 0) {
-      output.push("pong");
-    } else  {
-      output.push(i);
-    }
-  }
-  return output;
-};
-
-exports.calculatorModule = Calculator;
-
-},{}],3:[function(require,module,exports){
 var apiKey = require('./../.env').apiKey;
 
 function Doctor(){
@@ -33,16 +10,21 @@ function Doctor(){
 Doctor.prototype.getDoctors = function(medicalIssue) {
   $.get('https://api.betterdoctor.com/2016-03-01/doctors?query='+ medicalIssue+'&location=45.5231%2C-122.6765%2C%205&user_location=45.5231%2C-122.6765&skip=0&limit=20&user_key=' + apiKey)
    .then(function(result) {
-      console.log(result);
+     result.data.forEach(function(doctor){
+       var doctorList = [];
+       doctorList.push(doctor.profile.bio);
+       console.log(doctorList);
+       return(doctorList);
+     });
     })
    .fail(function(error){
-      console.log("fail");
+      return("fail");
     });
 };
 
 exports.doctorModule = Doctor;
 
-},{"./../.env":1}],4:[function(require,module,exports){
+},{"./../.env":1}],3:[function(require,module,exports){
 var Calculator = require('./../js/doctor.js').calculatorModule;
 
 $(document).ready(function() {
@@ -57,24 +39,18 @@ $(document).ready(function() {
   });
 });
 
-var Doctor = require('./../js/doctors.js').doctorModule;
+var Doctor = require('./../js/doctor.js').doctorModule;
 
 $(document).ready(function() {
   var foundDoctors = new Doctor();
   $('#doctorLocation').click(function() {
     var issue = $('#issue').val();
     $('#issue').val("");
-    foundDoctors.getDoctors(issue);
+    var output = foundDoctors.getDoctors(issue);
+    output.data.forEach(function(doctor){
+      $('#solution').append("<li>" + doctor.profile.first_name + "</li>");
+    });
   });
 });
 
-$(document).ready(function(){
-  $('#signup').submit(function(event){
-    event.preventDefault();
-    var email = $('#email').val();
-    $('#signup').hide();
-    $('#solution').prepend('<p>Thank you, ' + email + ' has been added to our list!</p>');
-  });
-});
-
-},{"./../js/doctor.js":2,"./../js/doctors.js":3}]},{},[4]);
+},{"./../js/doctor.js":2}]},{},[3]);

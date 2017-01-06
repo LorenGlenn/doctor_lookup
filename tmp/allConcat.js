@@ -12,22 +12,16 @@ $(document).ready(function() {
   });
 });
 
-var Doctor = require('./../js/doctors.js').doctorModule;
+var Doctor = require('./../js/doctor.js').doctorModule;
 
 $(document).ready(function() {
   var foundDoctors = new Doctor();
   $('#doctorLocation').click(function() {
     var issue = $('#issue').val();
     $('#issue').val("");
-    foundDoctors.getDoctors(issue);
-  });
-});
-
-$(document).ready(function(){
-  $('#signup').submit(function(event){
-    event.preventDefault();
-    var email = $('#email').val();
-    $('#signup').hide();
-    $('#solution').prepend('<p>Thank you, ' + email + ' has been added to our list!</p>');
+    var output = foundDoctors.getDoctors(issue);
+    output.data.forEach(function(doctor){
+      $('#solution').append("<li>" + doctor.profile.first_name + "</li>");
+    });
   });
 });
