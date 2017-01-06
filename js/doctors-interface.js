@@ -5,6 +5,7 @@ $(document).ready(function() {
   $('#doctorLocation').click(function() {
     var issue = $('#issue').val();
     $('#issue').val("");
+    $('#solution').empty();
     foundDoctors.getDoctors(issue);
   });
 });

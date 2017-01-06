@@ -19,9 +19,7 @@ $(document).ready(function() {
   $('#doctorLocation').click(function() {
     var issue = $('#issue').val();
     $('#issue').val("");
-    var output = foundDoctors.getDoctors(issue);
-    output.forEach(function(bio){
-      $('#solution').append("<li>" + bio + "</li>");
-    });
+    $('#solution').empty();
+    foundDoctors.getDoctors(issue);
   });
 });
